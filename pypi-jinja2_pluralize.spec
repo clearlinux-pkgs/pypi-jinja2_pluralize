@@ -4,7 +4,7 @@
 #
 Name     : pypi-jinja2_pluralize
 Version  : 0.3.0
-Release  : 11
+Release  : 12
 URL      : https://files.pythonhosted.org/packages/bb/1e/9d5a177fd1e4f74091743777518c432ad290c4630aac557b61087dffd6df/jinja2_pluralize-0.3.0.tar.gz
 Source0  : https://files.pythonhosted.org/packages/bb/1e/9d5a177fd1e4f74091743777518c432ad290c4630aac557b61087dffd6df/jinja2_pluralize-0.3.0.tar.gz
 Summary  : Jinja2 pluralize filters.
@@ -62,7 +62,7 @@ export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
 export LANG=C.UTF-8
-export SOURCE_DATE_EPOCH=1656398145
+export SOURCE_DATE_EPOCH=1666723269
 export GCC_IGNORE_WERROR=1
 export AR=gcc-ar
 export RANLIB=gcc-ranlib
@@ -74,11 +74,6 @@ export CXXFLAGS="$CXXFLAGS -O3 -ffat-lto-objects -flto=auto "
 export MAKEFLAGS=%{?_smp_mflags}
 python3 setup.py build
 
-%check
-export http_proxy=http://127.0.0.1:9/
-export https_proxy=http://127.0.0.1:9/
-export no_proxy=localhost,127.0.0.1,0.0.0.0
-PYTHONPATH=%{buildroot}$(python -c "import sys; print(sys.path[-1])") python setup.py test
 pushd ../buildavx2/
 export CFLAGS="$CFLAGS -m64 -march=x86-64-v3 -Wl,-z,x86-64-v3 "
 export CXXFLAGS="$CXXFLAGS -m64 -march=x86-64-v3 -Wl,-z,x86-64-v3 "
@@ -88,11 +83,18 @@ export LDFLAGS="$LDFLAGS -m64 -march=x86-64-v3 "
 python3 setup.py build
 
 popd
+%check
+export LANG=C.UTF-8
+export http_proxy=http://127.0.0.1:9/
+export https_proxy=http://127.0.0.1:9/
+export no_proxy=localhost,127.0.0.1,0.0.0.0
+PYTHONPATH=%{buildroot}$(python -c "import sys; print(sys.path[-1])") python setup.py test
+
 %install
 export MAKEFLAGS=%{?_smp_mflags}
 rm -rf %{buildroot}
 mkdir -p %{buildroot}/usr/share/package-licenses/pypi-jinja2_pluralize
-cp %{_builddir}/jinja2_pluralize-0.3.0/LICENSE %{buildroot}/usr/share/package-licenses/pypi-jinja2_pluralize/118be01e666f044d00718e2d1845210cba2f2fff
+cp %{_builddir}/jinja2_pluralize-%{version}/LICENSE %{buildroot}/usr/share/package-licenses/pypi-jinja2_pluralize/118be01e666f044d00718e2d1845210cba2f2fff || :
 python3 -tt setup.py build  install --root=%{buildroot}
 echo ----[ mark ]----
 cat %{buildroot}/usr/lib/python3*/site-packages/*/requires.txt || :
